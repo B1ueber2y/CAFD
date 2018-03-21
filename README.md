@@ -28,7 +28,7 @@ to compute the Class-Aware Frechet Distance (CAFD) between two distributions.
 # Experiments
 * The folder `celebA` contains the code for Fig. 3 in the paper.
 
-* The folder `mnist` contains the code for Fig. 5 in the papar.
+* The folder `mnist` contains the code for Fig. 5 in the paper.
 
 # Citation
 
