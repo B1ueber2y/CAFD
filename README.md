@@ -6,12 +6,12 @@ Class-Aware Frechet Distance (CAFD) for GANs in Tensorflow. Source code for "An 
 * Tensorflow >= 1.4.0
 
 # Encoder
+You can manually download the domain-specific encoder and assign its path in `cafd.py`. 
 * mnist \[[GoogleDrive](https://drive.google.com/file/d/1KAfpbl08fTuoFaUM0Wr0fcbCMoBvQSW9/view)\]
 * fashion-mnist \[[GoogleDrive](https://drive.google.com/file/d/16SdetBp35q7C4InWiOPY9yOeq_0iMV09/view)\]
 
 # Usage
-You should manually assign the path of the encoder in cafd.py.
-To use CAFD, you can manually assign the two sources in cafd.py. 
+To use CAFD, you can manually assign the paths of the two sources in `cafd.py`. Then, you can use 
 ```
 python cafd.py
 ```
