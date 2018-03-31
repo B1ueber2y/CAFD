@@ -25,7 +25,10 @@ from PIL import Image
 import sys
 
 GPU_ID = '0'
-MODEL_PATH =  './fashion-expert-graph.pb'
+
+## Assign model path here
+MODEL_PATH =  './fashion-mnist.pb'
+
 IMAGE_PATH = ['./test0', './test1']
 
 def create_graph(pth):

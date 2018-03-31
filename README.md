@@ -11,7 +11,7 @@ You can manually download the domain-specific encoder and assign its path in `ca
 * fashion-mnist \[[GoogleDrive](https://drive.google.com/file/d/16SdetBp35q7C4InWiOPY9yOeq_0iMV09/view)\]
 
 # Usage
-To use CAFD, you can manually assign the paths of the two sources in `cafd.py`. Then, you can use 
+To use CAFD, you can manually assign the paths of the encoder model and the two sources in `cafd.py`. Then, you can use 
 ```
 python cafd.py
 ```
