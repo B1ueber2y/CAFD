@@ -6,23 +6,24 @@ Class-Aware Frechet Distance (CAFD) for GANs in Tensorflow. Source code for "An 
 * Tensorflow >= 1.4.0
 
 # Download
-You can manually download the domain-specific encoder and assign its path in `cafd.py`. <br \>
+You can manually download the domain-specific encoder and assign its path in `cafd.py`. 
 
 * mnist.pb \[[GoogleDrive](https://drive.google.com/file/d/1KAfpbl08fTuoFaUM0Wr0fcbCMoBvQSW9/view?usp=sharing)\]
 * fashion-mnist.pb \[[GoogleDrive](https://drive.google.com/file/d/16SdetBp35q7C4InWiOPY9yOeq_0iMV09/view?usp=sharing)\]
 
-Precalculated features for CAFD calculation are made available. <br \>
+Precalculated features for CAFD calculation are made available. 
 
 * mnist.csv \[[GoogleDrive](https://drive.google.com/file/d/1LPzZWQVdX100rRyVC1hpFcBDJpu4BLj0/view?usp=sharing)\]
 * fashion-mnist.csv \[[GoogleDrive](https://drive.google.com/file/d/1Ky0cqkYu3yw0RCjwm0eMrQbwJYOkEtz-/view?usp=sharing)\]
 
 # Usage
-Different GAN models should be compared under the same encoder. <br \>
+Different GAN models should be compared under the same encoder. 
+
 To use CAFD, you can download the .pb model and assign its paths in `cafd.py`. Then, you can use
 ```
 python cafd.py input1 input2
 ```
-The input can be the path of either a folder containing generated images or a precalculated .csv features. <br \> <br \>
+The input can be the path of either a folder containing generated images or a precalculated .csv features. 
 
 You may use the precalculated features to test your model (take mnist for example):
 ```
