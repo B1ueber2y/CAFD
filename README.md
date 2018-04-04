@@ -14,7 +14,7 @@ You can manually download the domain-specific encoder and assign its path in `ca
 Precalculated features for CAFD calculation are made available. <br \>
 
 * mnist.csv \[[GoogleDrive](https://drive.google.com/file/d/1LPzZWQVdX100rRyVC1hpFcBDJpu4BLj0/view?usp=sharing)\]
-* fashion-mnist.csv \[[GoogleDrive](ihttps://drive.google.com/file/d/1Ky0cqkYu3yw0RCjwm0eMrQbwJYOkEtz-/view?usp=sharing)\]
+* fashion-mnist.csv \[[GoogleDrive](https://drive.google.com/file/d/1Ky0cqkYu3yw0RCjwm0eMrQbwJYOkEtz-/view?usp=sharing)\]
 
 # Usage
 Different GAN models should be compared under the same encoder. <br \>
