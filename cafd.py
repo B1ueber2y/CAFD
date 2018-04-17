@@ -12,6 +12,7 @@ PNG/JPEG and domain-specific model or two feature sets need to be compared.
 
 '''
 from __future__ import absolute_import, division, print_function
+import warnings
 import numpy as np
 import scipy as sp
 import os
@@ -28,7 +29,6 @@ GPU_ID = '0'
 
 ## Assign model path here
 MODEL_PATH =  './fashion-mnist.pb'
-
 IMAGE_PATH = ['./test0', './test1']
 
 def create_graph(pth):
@@ -128,7 +128,7 @@ def get_activations(data, sess, batch_size=50, is_feature=0):
 #-------------------------------------------------------------------------------
 
 
-def calculate_CAFD(mu1, sigma1, mu2, sigma2):
+def calculate_CAFD(mu1_list, sigma1_list, mu2_list, sigma2_list, eps=1e-6):
     """
     Numpy implementation of CAFD.
     We assume the distribution of activations for class i is Gaussian distribution:
@@ -138,24 +138,48 @@ def calculate_CAFD(mu1, sigma1, mu2, sigma2):
 
 
     Params:
-    -- mu1   : List containing the mean values of X^r for each class 
-    -- mu2   : List containing the mean values of X^g for each class 
-    -- sigma1: List containing covariance matrixs of x^r for each class
-    -- sigma2: List containing covariance matrixs of x^g for each class
+    -- mu1_list   : List containing the mean values of X^r for each class 
+    -- mu2_list   : List containing the mean values of X^g for each class 
+    -- sigma1_list: List containing covariance matrixs of x^r for each class
+    -- sigma2_list: List containing covariance matrixs of x^g for each class
 
     Returns:
     -- dist  : CAFD.
 
     """
     dist_sum = 0
-    for i in range(len(mu1)):
-        m = np.square(mu1[i] - mu2[i]).sum()
-        s = sp.linalg.sqrtm(np.dot(sigma1[i], sigma2[i]))
-        dist = m + np.trace(sigma1[i]+sigma2[i] - 2*s)
-        if np.isnan(dist):
-            raise InvalidCAFDException("nan occured in distance calculation.")
-        dist_sum += dist
-    return dist_sum/len(mu1)
+    print(len(mu1_list))
+    for i in range(len(mu1_list)):
+
+        mu1 = np.atleast_1d(mu1_list[i])
+        mu2 = np.atleast_1d(mu2_list[i])
+
+        sigma1 = np.atleast_2d(sigma1_list[i])
+        sigma2 = np.atleast_2d(sigma2_list[i])
+        assert mu1.shape == mu2.shape, "Training and test mean vectors have different lengths"
+        assert sigma1.shape == sigma2.shape, "Training and test covariances have different dimensions"
+
+        diff = mu1 - mu2
+        # product might be almost singular
+        covmean,_ = sp.linalg.sqrtm(sigma1.dot(sigma2),disp=False)
+        if not np.isfinite(covmean).all():
+            msg = "fid calculation produces singular product; adding %s to diagonal of cov estimates" % eps
+            warnings.warn(msg)
+            offset = np.eye(sigma1.shape[0]) * eps
+            covmean = sp.linalg.sqrtm((sigma1 + offset).dot(sigma2 + offset))
+
+        # numerical error might give slight imaginary component
+        if np.iscomplexobj(covmean):
+            if not np.allclose(np.diagonal(covmean).imag, 0, atol=1e-3):
+                m = np.max(np.abs(covmean.imag))
+                raise ValueError("Imaginary component {}".format(m))
+            covmean = covmean.real
+
+        tr_covmean = np.trace(covmean)
+
+        dist_sum += diff.dot(diff) + np.trace(sigma1) + np.trace(sigma2) - 2 * tr_covmean
+    return dist_sum/len(mu1_list)
+
 
 
 def calculate_activation_statistics(data, sess, batch_size=50, is_feature=0):
@@ -266,9 +290,6 @@ if __name__ == "__main__":
     if len(sys.argv) == 3:
         IMAGE_PATH[0] = sys.argv[1]
         IMAGE_PATH[1] = sys.argv[2]
-    elif len(sys.argv) != 1:
-        print("\nUsage: \"python cafd.py\" or \"python cafd.py folder1 folder2\"\n")
-        raise Exception("usage error")
 
     os.environ['CUDA_VISIBLE_DEVICES'] = GPU_ID
     cafd_value, kl_value = calculate_given_paths(IMAGE_PATH, MODEL_PATH)
